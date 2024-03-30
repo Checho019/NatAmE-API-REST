@@ -1,0 +1,25 @@
+package com.natame.api.negocio.servicios.implementaciones;
+
+import com.natame.api.dao.interfaces.ClienteDAO;
+import com.natame.api.negocio.entidades.Cliente;
+import com.natame.api.negocio.servicios.interfaces.ClienteServicio;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ClienteServicioImpl implements ClienteServicio {
+    private final ClienteDAO clienteDAO;
+
+    public ClienteServicioImpl(ClienteDAO clienteDAO){
+        this.clienteDAO = clienteDAO;
+    }
+
+    @Override
+    public Cliente agregarCliente(Cliente cliente) {
+        return clienteDAO.agregarCliente(cliente);
+    }
+
+    @Override
+    public Cliente consultarCliente(String correoCliente) {
+        return clienteDAO.obtenerCliente(correoCliente);
+    }
+}
