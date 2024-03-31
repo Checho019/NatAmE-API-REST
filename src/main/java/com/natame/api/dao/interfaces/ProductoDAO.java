@@ -6,7 +6,7 @@ import com.natame.api.negocio.entidades.Producto;
 import java.util.List;
 
 public interface ProductoDAO {
-    public Producto consultarProducto(DAODataModel<Integer> codigo) throws Exception;
-    public List<Producto> obtenerProductos(DAODataModel<?> credenciales) throws Exception;
+    Producto consultarProducto(DAODataModel<Integer> codigo) throws Exception;
+    List<Producto> obtenerProductos(DAODataModel<?> credenciales) throws Exception;
 
 }

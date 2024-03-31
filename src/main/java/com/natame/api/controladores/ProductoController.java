@@ -4,7 +4,6 @@ import com.natame.api.dto.DAODataModel;
 import com.natame.api.negocio.entidades.Producto;
 import com.natame.api.negocio.servicios.interfaces.ProductoServicio;
 import com.natame.api.utils.Credenciales;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
