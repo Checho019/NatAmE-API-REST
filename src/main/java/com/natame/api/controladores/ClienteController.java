@@ -5,7 +5,6 @@ import com.natame.api.negocio.entidades.Cliente;
 import com.natame.api.negocio.servicios.interfaces.ClienteServicio;
 import com.natame.api.utils.Credenciales;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -24,8 +23,11 @@ public class ClienteController {
     }
 
     @GetMapping("obtener/{correo}")
-    public ResponseEntity<Cliente> obtenerCliente(@PathVariable String correo) throws Exception{
-        Cliente cliente = clienteServicio.consultarCliente(correo);
+    public ResponseEntity<Cliente> obtenerCliente(@PathVariable String correo,
+                                                  @RequestHeader("user") String user,
+                                                  @RequestHeader("password") String password) throws Exception{
+        DAODataModel<String> correoDDO = new DAODataModel<>(correo, new Credenciales(user, password));
+        Cliente cliente = clienteServicio.consultarCliente(correoDDO);
         if (cliente == null){
             throw new Exception("El cliente que busca no existe");
         }
@@ -33,12 +35,11 @@ public class ClienteController {
     }
 
     @PostMapping("agregar")
-    public ResponseEntity<Cliente> agregarCliente(
-            @Valid @RequestBody Cliente cliente,
-            @RequestHeader("user") String user,
-            @RequestHeader("password") String password) throws Exception{
-        DAODataModel<Cliente> ddm = new DAODataModel<>(cliente, new Credenciales(user, password));
-        clienteServicio.agregarCliente(cliente);
+    public ResponseEntity<Cliente> agregarCliente(@Valid @RequestBody Cliente cliente,
+                                                  @RequestHeader("user") String user,
+                                                  @RequestHeader("password") String password) throws Exception{
+        DAODataModel<Cliente> clienteDDM = new DAODataModel<>(cliente, new Credenciales(user, password));
+        clienteServicio.agregarCliente(clienteDDM);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("obtener/{correo}")
                     .buildAndExpand(cliente.getCorreo())

@@ -1,11 +1,11 @@
 package com.natame.api.dao.implementaciones;
 
 import com.natame.api.dao.interfaces.ProductoDAO;
+import com.natame.api.dto.DAODataModel;
 import com.natame.api.negocio.entidades.Producto;
 import com.natame.api.utils.OracleConnection;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,9 +39,9 @@ public class ProductoDAOImpl implements ProductoDAO {
     }
 
     @Override
-    public Producto consultarProducto(int codigo) throws Exception {
+    public Producto consultarProducto(DAODataModel<Integer> codigo) throws Exception {
         for (Producto producto: productos){
-            if (producto.getCodigo() == codigo){
+            if (producto.getCodigo() == codigo.data()){
                 return producto;
             }
         }
@@ -49,7 +49,7 @@ public class ProductoDAOImpl implements ProductoDAO {
     }
 
     @Override
-    public List<Producto> obtenerProductos() throws Exception{
+    public List<Producto> obtenerProductos(DAODataModel<?> credenciales) throws Exception{
         return this.productos;
     }
 }

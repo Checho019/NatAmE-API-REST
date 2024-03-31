@@ -1,6 +1,7 @@
 package com.natame.api.dao.implementaciones;
 
 import com.natame.api.dao.interfaces.ClienteDAO;
+import com.natame.api.dto.DAODataModel;
 import com.natame.api.negocio.entidades.Cliente;
 import org.springframework.stereotype.Repository;
 
@@ -34,9 +35,9 @@ public class ClienteDAOImpl implements ClienteDAO {
     }
 
     @Override
-    public Cliente obtenerCliente(String correo) throws Exception{
+    public Cliente obtenerCliente(DAODataModel<String> correo) throws Exception{
         for (Cliente cliente: clientes){
-            if (cliente.getCorreo().equals(correo)){
+            if (cliente.getCorreo().equals(correo.data())){
                 return cliente;
             }
         }
@@ -44,8 +45,8 @@ public class ClienteDAOImpl implements ClienteDAO {
     }
 
     @Override
-    public Cliente agregarCliente(Cliente cliente) throws Exception{
-        this.clientes.add(cliente);
-        return cliente;
+    public Cliente agregarCliente(DAODataModel<Cliente> cliente) throws Exception{
+        this.clientes.add(cliente.data());
+        return cliente.data();
     }
 }
