@@ -9,17 +9,17 @@ import org.springframework.stereotype.Service;
 public class ClienteServicioImpl implements ClienteServicio {
     private final ClienteDAO clienteDAO;
 
-    public ClienteServicioImpl(ClienteDAO clienteDAO){
+    public ClienteServicioImpl(ClienteDAO clienteDAO) {
         this.clienteDAO = clienteDAO;
     }
 
     @Override
-    public Cliente agregarCliente(Cliente cliente) {
+    public Cliente agregarCliente(Cliente cliente) throws Exception {
         return clienteDAO.agregarCliente(cliente);
     }
 
     @Override
-    public Cliente consultarCliente(String correoCliente) {
+    public Cliente consultarCliente(String correoCliente) throws Exception {
         return clienteDAO.obtenerCliente(correoCliente);
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public class ClienteDAOImpl implements ClienteDAO {
 
-    private List<Cliente> clientes;
+    private final List<Cliente> clientes;
 
     public ClienteDAOImpl(){
 
@@ -35,7 +35,7 @@ public class ClienteDAOImpl implements ClienteDAO {
     }
 
     @Override
-    public Cliente obtenerCliente(String correo) {
+    public Cliente obtenerCliente(String correo) throws Exception{
         for (Cliente cliente: clientes){
             if (cliente.getCorreo().equals(correo)){
                 return cliente;
@@ -45,7 +45,7 @@ public class ClienteDAOImpl implements ClienteDAO {
     }
 
     @Override
-    public Cliente agregarCliente(Cliente cliente) {
+    public Cliente agregarCliente(Cliente cliente) throws Exception{
         this.clientes.add(cliente);
         return cliente;
     }

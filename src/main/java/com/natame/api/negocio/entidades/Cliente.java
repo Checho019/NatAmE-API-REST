@@ -12,7 +12,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Cliente {
-
     private long identificacion;
     private String correo;
     private String nombre1;
@@ -25,5 +24,4 @@ public class Cliente {
     private byte codigoRegion;
     private long idRepCapto;
     private long idRepActual;
-
 }

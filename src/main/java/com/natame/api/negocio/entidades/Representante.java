@@ -10,7 +10,6 @@ import java.util.Date;
 @NoArgsConstructor
 @ToString
 public class Representante {
-
     private long identificacion;
     private String correo;
     private String nombre1;
@@ -23,5 +22,4 @@ public class Representante {
     private long telefono;
     private String diraccion;
     private byte codigoRegion;
-
 }
