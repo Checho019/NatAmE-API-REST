@@ -2,8 +2,10 @@ package com.natame.api.dao.implementaciones;
 
 import com.natame.api.dao.interfaces.ProductoDAO;
 import com.natame.api.negocio.entidades.Producto;
+import com.natame.api.utils.OracleConnection;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +15,9 @@ public class ProductoDAOImpl implements ProductoDAO {
 
     private final List<Producto> productos;
 
-    public ProductoDAOImpl(){
+    public ProductoDAOImpl() throws Exception{
+        OracleConnection conn = new OracleConnection("system","Oracle19");
+        System.out.println("Conexion creada");
         this.productos = new ArrayList<>(
                 Arrays.asList(
                         new Producto(

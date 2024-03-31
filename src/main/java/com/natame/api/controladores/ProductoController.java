@@ -28,15 +28,9 @@ public class ProductoController {
         return ResponseEntity.ok(producto);
     }
 
-    @GetMapping("todos")
+    @GetMapping("/")
     public ResponseEntity<List<Producto>> obtenerProductos() throws Exception {
         List<Producto> productos = productoServicio.obtenerProductos();
         return ResponseEntity.ok(productos);
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Exception> manejoException(Exception e){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
-    }
-
 }

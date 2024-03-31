@@ -1,7 +1,9 @@
 package com.natame.api.controladores;
 
+import com.natame.api.dto.DAODataModel;
 import com.natame.api.negocio.entidades.Cliente;
 import com.natame.api.negocio.servicios.interfaces.ClienteServicio;
+import com.natame.api.utils.Credenciales;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +33,11 @@ public class ClienteController {
     }
 
     @PostMapping("agregar")
-    public ResponseEntity<Cliente> agregarCliente(@Valid @RequestBody Cliente cliente) throws Exception{
+    public ResponseEntity<Cliente> agregarCliente(
+            @Valid @RequestBody Cliente cliente,
+            @RequestHeader("user") String user,
+            @RequestHeader("password") String password) throws Exception{
+        DAODataModel<Cliente> ddm = new DAODataModel<>(cliente, new Credenciales(user, password));
         clienteServicio.agregarCliente(cliente);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("obtener/{correo}")
@@ -39,10 +45,4 @@ public class ClienteController {
                     .toUri();
         return ResponseEntity.created(location).build();
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Exception> manejoException(Exception e){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
-    }
-
 }
