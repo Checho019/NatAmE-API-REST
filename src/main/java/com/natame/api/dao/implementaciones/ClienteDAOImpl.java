@@ -27,7 +27,6 @@ public class ClienteDAOImpl implements ClienteDAO {
                                 "bogota",
                                 "calle1",
                                 123L,
-                                (byte) 1,
                                 1L,
                                 1L)
                 )

@@ -2,6 +2,7 @@ package com.natame.api.controladores;
 
 import com.natame.api.negocio.entidades.Cliente;
 import com.natame.api.negocio.servicios.interfaces.ClienteServicio;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class ClienteController {
     }
 
     @PostMapping("agregar")
-    public ResponseEntity<Cliente> agregarCliente(@RequestBody Cliente cliente) throws Exception{
+    public ResponseEntity<Cliente> agregarCliente(@Valid @RequestBody Cliente cliente) throws Exception{
         clienteServicio.agregarCliente(cliente);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("obtener/{correo}")
