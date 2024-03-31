@@ -26,7 +26,6 @@ public class Representante {
     @NotEmpty
     private String apellido1;
     private String apellido2;
-    @NotEmpty
     private char genero;
     @NotNull
     private Date fechaNacimiento;

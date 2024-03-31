@@ -26,8 +26,8 @@ public class ClienteController {
     public ResponseEntity<Cliente> obtenerCliente(@PathVariable String correo,
                                                   @RequestHeader("user") String user,
                                                   @RequestHeader("password") String password) throws Exception{
-        DAODataModel<String> correoDDO = new DAODataModel<>(correo, new Credenciales(user, password));
-        Cliente cliente = clienteServicio.consultarCliente(correoDDO);
+        DAODataModel<String> correoDDM = new DAODataModel<>(correo, new Credenciales(user, password));
+        Cliente cliente = clienteServicio.consultarCliente(correoDDM);
         if (cliente == null){
             throw new Exception("El cliente que busca no existe");
         }
