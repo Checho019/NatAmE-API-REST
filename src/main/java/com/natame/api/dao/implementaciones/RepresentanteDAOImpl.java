@@ -7,23 +7,38 @@ import com.natame.api.utils.Credenciales;
 import com.natame.api.utils.OracleConnection;
 import org.springframework.stereotype.Repository;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class RepresentanteDAOImpl implements RepresentanteDAO {
-    private final List<Representante> representantes = new ArrayList<>();
-
     @Override
     public Representante obtenerRepresentante(DAODataModel<Long> id) throws Exception {
-        for (Representante representante: representantes){
-            if (representante.getIdentificacion() == id.data()){
-                return representante;
-            }
+        Credenciales credenciales = id.credenciales();
+        OracleConnection connCredentials = new OracleConnection(credenciales.user(),credenciales.password());
+        Connection conn = connCredentials.getConn();
+
+        String sql = "SELECT * FROM salesreps WHERE k_identificacion = ?";
+        PreparedStatement statement = conn.prepareStatement(sql);
+        statement.setLong(1, id.data());
+
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()){
+            return new Representante(
+                    resultSet.getLong("k_identificacion"),
+                    resultSet.getString("n_correo"),
+                    resultSet.getString("n_nombre1"),
+                    resultSet.getString("n_nombre2"),
+                    resultSet.getString("n_apellido1"),
+                    resultSet.getString("n_apellido2"),
+                    resultSet.getString("i_genero").charAt(0),
+                    resultSet.getDate("f_fecha_nac"),
+                    resultSet.getDate("f_fecha_con"),
+                    resultSet.getLong("o_telefono"),
+                    resultSet.getString("n_direccion"),
+                    resultSet.getInt("k_codigo_Region")
+            );
         }
         return null;
     }
