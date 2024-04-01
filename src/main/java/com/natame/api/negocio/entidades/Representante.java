@@ -37,5 +37,5 @@ public class Representante {
     private String diraccion;
     @NotNull
     @Positive
-    private byte codigoRegion;
+    private int codigoRegion;
 }
