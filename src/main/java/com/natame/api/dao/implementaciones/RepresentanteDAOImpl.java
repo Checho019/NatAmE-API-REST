@@ -2,6 +2,7 @@ package com.natame.api.dao.implementaciones;
 
 import com.natame.api.dao.interfaces.RepresentanteDAO;
 import com.natame.api.dto.DAODataModel;
+import com.natame.api.dto.RepresentanteVista;
 import com.natame.api.negocio.entidades.Representante;
 import com.natame.api.utils.Credenciales;
 import com.natame.api.utils.OracleConnection;
@@ -95,5 +96,27 @@ public class RepresentanteDAOImpl implements RepresentanteDAO {
             throw new Exception(e.getMessage());
         }
         return representante.data();
+    }
+
+    @Override
+    public RepresentanteVista obtenerVistaSimple(DAODataModel<String> correo) throws Exception {
+        Credenciales credenciales = correo.credenciales();
+        OracleConnection connCredentials = new OracleConnection(credenciales.user(),credenciales.password());
+        Connection conn = connCredentials.getConn();
+
+        String sql = "SELECT * FROM VISTA_REPS WHERE n_correo = ?";
+        PreparedStatement statement = conn.prepareStatement(sql);
+        statement.setString(1, correo.data());
+
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()){
+            return new RepresentanteVista(
+                    resultSet.getString(1),
+                    resultSet.getString(2),
+                    resultSet.getLong(3),
+                    resultSet.getString(4)
+            );
+        }
+        return null;
     }
 }

@@ -2,6 +2,7 @@ package com.natame.api.negocio.servicios.implementaciones;
 
 import com.natame.api.dao.interfaces.RepresentanteDAO;
 import com.natame.api.dto.DAODataModel;
+import com.natame.api.dto.RepresentanteVista;
 import com.natame.api.negocio.entidades.Representante;
 import com.natame.api.negocio.servicios.interfaces.RepresentanteServicio;
 import org.springframework.stereotype.Service;
@@ -20,5 +21,10 @@ public class RepresentanteServicioImpl implements RepresentanteServicio {
     @Override
     public Representante crearRepresentante(DAODataModel<Representante> representante) throws Exception {
         return representanteDAO.agregarRepresentante(representante);
+    }
+
+    @Override
+    public RepresentanteVista representanteSimple(DAODataModel<String> correo) throws Exception {
+        return representanteDAO.obtenerVistaSimple(correo);
     }
 }

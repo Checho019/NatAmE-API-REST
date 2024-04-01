@@ -1,6 +1,7 @@
 package com.natame.api.controladores;
 
 import com.natame.api.dto.DAODataModel;
+import com.natame.api.dto.RepresentanteVista;
 import com.natame.api.negocio.entidades.Representante;
 import com.natame.api.negocio.servicios.interfaces.RepresentanteServicio;
 import com.natame.api.utils.Credenciales;
@@ -45,6 +46,18 @@ public class RepresentanteController {
                 .buildAndExpand(representante.getIdentificacion())
                 .toUri();
         return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping("obtenerVista/{correo}")
+    public ResponseEntity<RepresentanteVista> obtenerVistaRepresentante(@PathVariable String correo,
+                                                                   @RequestHeader("user") String user,
+                                                                   @RequestHeader("password") String password) throws Exception{
+        DAODataModel<String> idDDM = new DAODataModel<>(correo, new Credenciales(user, password));
+        RepresentanteVista representante = representanteServicio.representanteSimple(idDDM);
+        if (representante == null){
+            throw new Exception("El representante que busca no existe");
+        }
+        return ResponseEntity.ok(representante);
     }
 
 }
