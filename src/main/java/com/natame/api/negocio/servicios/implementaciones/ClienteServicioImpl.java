@@ -20,7 +20,7 @@ public class ClienteServicioImpl implements ClienteServicio {
     }
 
     @Override
-    public Cliente consultarCliente(DAODataModel<String> correoCliente) throws Exception {
-        return clienteDAO.obtenerCliente(correoCliente);
+    public Cliente consultarCliente(DAODataModel<Long> id) throws Exception {
+        return clienteDAO.obtenerCliente(id);
     }
 }

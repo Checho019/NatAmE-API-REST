@@ -1,6 +1,5 @@
 package com.natame.api.dao.implementaciones;
 
-import ch.qos.logback.core.net.server.Client;
 import com.natame.api.dao.interfaces.ClienteDAO;
 import com.natame.api.dto.DAODataModel;
 import com.natame.api.negocio.entidades.Cliente;
@@ -11,15 +10,38 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 @Repository
 public class ClienteDAOImpl implements ClienteDAO {
 
     @Override
-    public Cliente obtenerCliente(DAODataModel<String> correo) throws Exception{
+    public Cliente obtenerCliente(DAODataModel<Long> id) throws Exception{
+        Credenciales credenciales = id.credenciales();
+        OracleConnection connCredentials = new OracleConnection(credenciales.user(),credenciales.password());
+        Connection conn = connCredentials.getConn();
 
+        String sql = "SELECT * FROM clients WHERE k_identificacion = ?";
+        PreparedStatement statement = conn.prepareStatement(sql);
+        statement.setLong(1, id.data());
+
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()){
+            return new Cliente(
+                    resultSet.getLong("k_identificacion"),
+                    resultSet.getString("k_correo"),
+                    resultSet.getString("n_nombre1"),
+                    resultSet.getString("n_nombre2"),
+                    resultSet.getString("n_apellido1"),
+                    resultSet.getString("n_apellido2"),
+                    resultSet.getString("n_ciudad"),
+                    resultSet.getString("n_direccion"),
+                    resultSet.getLong("o_telefono"),
+                    resultSet.getInt("k_idrepcap"),
+                    resultSet.getInt("k_idrepactual")
+            );
+        }
         return null;
     }
 

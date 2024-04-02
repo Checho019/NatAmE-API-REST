@@ -22,11 +22,11 @@ public class ClienteController {
         this.clienteServicio = clienteServicio;
     }
 
-    @GetMapping("obtener/{correo}")
-    public ResponseEntity<Cliente> obtenerCliente(@PathVariable String correo,
+    @GetMapping("obtener/{id}")
+    public ResponseEntity<Cliente> obtenerCliente(@PathVariable long id,
                                                   @RequestHeader("user") String user,
                                                   @RequestHeader("password") String password) throws Exception{
-        DAODataModel<String> correoDDM = new DAODataModel<>(correo, new Credenciales(user, password));
+        DAODataModel<Long> correoDDM = new DAODataModel<>(id, new Credenciales(user, password));
         Cliente cliente = clienteServicio.consultarCliente(correoDDM);
         if (cliente == null){
             throw new Exception("El cliente que busca no existe");
