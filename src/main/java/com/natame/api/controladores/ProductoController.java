@@ -1,6 +1,7 @@
 package com.natame.api.controladores;
 
 import com.natame.api.dto.DAODataModel;
+import com.natame.api.dto.ProductoPrecioVista;
 import com.natame.api.negocio.entidades.Producto;
 import com.natame.api.negocio.servicios.interfaces.ProductoServicio;
 import com.natame.api.utils.Credenciales;
@@ -33,10 +34,10 @@ public class ProductoController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Producto>> obtenerProductos(@RequestHeader("user") String user,
-                                                           @RequestHeader("password") String password) throws Exception {
+    public ResponseEntity<List<ProductoPrecioVista>> obtenerProductos(@RequestHeader("user") String user,
+                                                                      @RequestHeader("password") String password) throws Exception {
         DAODataModel<?> credenciales = new DAODataModel<>(null,new Credenciales(user, password));
-        List<Producto> productos = productoServicio.obtenerProductos(credenciales);
+        List<ProductoPrecioVista> productos = productoServicio.obtenerProductos(credenciales);
         return ResponseEntity.ok(productos);
     }
 }

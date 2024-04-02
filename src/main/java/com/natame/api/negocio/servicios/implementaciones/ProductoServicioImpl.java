@@ -2,6 +2,7 @@ package com.natame.api.negocio.servicios.implementaciones;
 
 import com.natame.api.dao.interfaces.ProductoDAO;
 import com.natame.api.dto.DAODataModel;
+import com.natame.api.dto.ProductoPrecioVista;
 import com.natame.api.negocio.entidades.Producto;
 import com.natame.api.negocio.servicios.interfaces.ProductoServicio;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class ProductoServicioImpl implements ProductoServicio {
     }
 
     @Override
-    public List<Producto> obtenerProductos(DAODataModel<?> credenciales) throws Exception {
+    public List<ProductoPrecioVista> obtenerProductos(DAODataModel<?> credenciales) throws Exception {
         return productoDAO.obtenerProductos(credenciales);
     }
 }
