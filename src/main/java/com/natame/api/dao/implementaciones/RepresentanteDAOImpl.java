@@ -9,8 +9,6 @@ import com.natame.api.utils.OracleConnection;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Repository
 public class RepresentanteDAOImpl implements RepresentanteDAO {
