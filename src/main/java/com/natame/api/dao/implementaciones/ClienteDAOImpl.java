@@ -22,7 +22,7 @@ public class ClienteDAOImpl implements ClienteDAO {
         OracleConnection connCredentials = new OracleConnection(credenciales.user(),credenciales.password());
         Connection conn = connCredentials.getConn();
 
-        String sql = "SELECT * FROM clients WHERE k_identificacion = ?";
+        String sql = "SELECT * FROM CLIENTE WHERE k_identificacion = ?";
         PreparedStatement statement = conn.prepareStatement(sql);
         statement.setLong(1, id.data());
 
@@ -39,6 +39,7 @@ public class ClienteDAOImpl implements ClienteDAO {
                     resultSet.getString("n_direccion"),
                     resultSet.getLong("o_telefono"),
                     resultSet.getInt("k_idrepcap"),
+                    resultSet.getString("i_tipodocumento"),
                     resultSet.getInt("k_idrepactual")
             );
         }
@@ -56,7 +57,7 @@ public class ClienteDAOImpl implements ClienteDAO {
             conn.setAutoCommit(false);
 
             // Ingresar representante a la base de datos
-            String sql = "INSERT INTO clients (k_identificacion, k_correo, n_nombre1, n_nombre2, n_apellido1, n_apellido2, n_ciudad, n_direccion, o_telefono, k_idrepcap, k_idrepactual) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO CLIENTE (k_identificacion, k_correo, n_nombre1, n_nombre2, n_apellido1, n_apellido2, n_ciudad, n_direccion, o_telefono, k_idrepcap, i_tipodocumento, k_idrepactual) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setLong(1, cli.getIdentificacion());
             statement.setString(2, cli.getCorreo());
@@ -68,26 +69,29 @@ public class ClienteDAOImpl implements ClienteDAO {
             statement.setString(8,cli.getDireccion());
             statement.setLong(9, cli.getTelefono());
             statement.setLong(10, cli.getIdRepCapto());
-            statement.setLong(11, cli.getIdRepActual());
+            statement.setString(11, cli.getTipoDoc());
+            statement.setLong(12, cli.getIdRepActual());
 
             System.out.println("Ingresando Registro");
             statement.executeUpdate();
 
+            statement.execute("ALTER SESSION SET \"_ORACLE_SCRIPT\" = TRUE");
+
             // Crear usuario en la base de datos
             String usuario = "CLI" + cli.getIdentificacion();
-            String contraseña = cli.getIdentificacion() + "";
+            String contraseña = "CLI" + cli.getIdentificacion();
             String crearUsuarioSQL = "CREATE USER " + usuario + " IDENTIFIED BY " + contraseña;
             statement = conn.prepareStatement(crearUsuarioSQL);
             System.out.println("Creando usuario");
             statement.executeUpdate();
 
             // Ejecutar el procedimiento almacenado
-            String asignarRolSQL = "{ call A_R_CLIENTE(?, ?) }";
-            CallableStatement callableStatement = conn.prepareCall(asignarRolSQL);
-            callableStatement.setString(1, usuario);
-            callableStatement.setString(2, "R_CLIENTE");
-            System.out.println("Brindando privilegios");
-            callableStatement.execute();
+            for (String priv: OracleConnection.privileges){
+                String grantUsuarioSQL = "GRANT " + priv + " TO " + usuario;
+                statement = conn.prepareStatement(grantUsuarioSQL);
+                statement.executeUpdate();
+            }
+            System.out.println("Privilegios otorgados");
 
             System.out.println("Se ha creado el usuario: " + usuario + " con pass:" + contraseña);
             conn.commit();

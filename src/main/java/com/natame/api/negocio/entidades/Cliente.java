@@ -38,6 +38,8 @@ public class Cliente {
     @NotNull
     @Positive
     private long idRepCapto;
+    @NotEmpty
+    private String tipoDoc;
     @NotNull
     @Positive
     private long idRepActual;
