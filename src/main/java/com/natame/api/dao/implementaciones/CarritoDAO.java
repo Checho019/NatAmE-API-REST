@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Collections;
 
 @Service
@@ -28,8 +29,9 @@ public class CarritoDAO {
         statement.setLong(1, pedido.data());
 
         ResultSet resultSet = statement.executeQuery();
+        Carrito cn;
         if (resultSet.next()){
-            return new Carrito(
+            cn = new Carrito(
                     resultSet.getLong("K_COD_PEDIDO"),
                     resultSet.getDate("F_FECHA"),
                     resultSet.getLong("Q_PRECIO_FINAL"),
@@ -40,6 +42,25 @@ public class CarritoDAO {
                     resultSet.getString("N_DIRECCION_ENTREGA"),
                     Collections.emptyList()
             );
+            System.out.println("Caroo aaaaaaaaaa");
+            sql = "SELECT * FROM PEDIDO_PRODUCTO WHERE k_cod_pedido = ?";
+            PreparedStatement statement2 = conn.prepareStatement(sql);
+            statement2.setLong(1, pedido.data());
+            ResultSet resultSet2 = statement2.executeQuery();
+            ArrayList<PedidoProducto> app = new ArrayList<>();
+            while (resultSet2.next()){
+                app.add(
+                        new PedidoProducto(
+                                resultSet2.getLong(1),
+                                resultSet2.getInt("K_CODIGO_REGION"),
+                                resultSet2.getInt("Q_CANTIDAD")
+                        )
+                );
+            }
+
+            System.out.println("saaaaaaaaaaaaaaaaaaaaaa");
+            cn.setProductos(app);
+            return cn;
         }
         return null;
     }
