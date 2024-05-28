@@ -32,7 +32,7 @@ public class CarritoController {
         if (carrito == null){
             throw new Exception("El pedido que busca no existe");
         }
-        return ResponseEntity.ok().body(carrito);
+        return ResponseEntity.ok(carrito);
     }
 
     @PostMapping("agregar")
