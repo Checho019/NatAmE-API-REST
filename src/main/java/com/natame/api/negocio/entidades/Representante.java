@@ -35,7 +35,14 @@ public class Representante {
     private long telefono;
     @NotEmpty
     private String diraccion;
+    @NotEmpty
+    private String tipoDoc;
     @NotNull
     @Positive
     private int codigoRegion;
+    private long idRepCap;
+    @Positive
+    @NotNull
+    private int codigoCatRep;
+
 }

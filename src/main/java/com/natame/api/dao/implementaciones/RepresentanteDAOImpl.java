@@ -38,7 +38,10 @@ public class RepresentanteDAOImpl implements RepresentanteDAO {
                     resultSet.getDate("f_fecha_con"),
                     resultSet.getLong("o_telefono"),
                     resultSet.getString("n_direccion"),
-                    resultSet.getInt("k_codigo_Region")
+                    resultSet.getString("i_tipodocumento"),
+                    resultSet.getInt("k_codigo_Region"),
+                    resultSet.getLong("k_idrepcap"),
+                    resultSet.getInt("k_codigocatrep")
             );
         }
         return null;
@@ -53,9 +56,8 @@ public class RepresentanteDAOImpl implements RepresentanteDAO {
 
         try {
             conn.setAutoCommit(false);
-
             // Ingresar representante a la base de datos
-            String sql = "INSERT INTO salesreps (k_identificacion, n_correo, n_nombre1, n_nombre2, n_apellido1, n_apellido2, i_genero, f_fecha_nac, f_fecha_con, o_telefono, n_direccion, k_codigo_Region) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO REPRESENTANTE (k_identificacion, n_correo, n_nombre1, n_nombre2, n_apellido1, n_apellido2, i_genero, f_fecha_nac, f_fecha_con, o_telefono, n_direccion, i_tipodocumento, k_codigo_Region, k_idrepcap, k_codigocatrep) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setLong(1, rep.getIdentificacion());
             statement.setString(2, rep.getCorreo());
@@ -68,27 +70,34 @@ public class RepresentanteDAOImpl implements RepresentanteDAO {
             statement.setDate(9, new Date(rep.getFechaContratacion().getTime()));
             statement.setLong(10, rep.getTelefono());
             statement.setString(11, rep.getDiraccion());
-            statement.setInt(12, rep.getCodigoRegion());
+            statement.setString(12, rep.getTipoDoc());
+            statement.setInt(13, rep.getCodigoRegion());
+            statement.setLong(14, rep.getIdRepCap());
+            statement.setInt(15, rep.getCodigoCatRep());
             System.out.println("Ingresando Registro");
             statement.executeUpdate();
+            System.out.println("Ingresando Registro - EXITOSO");
+
+            statement.execute("ALTER SESSION SET \"_ORACLE_SCRIPT\" = TRUE");
 
             // Crear usuario en la base de datos
-            String usuario = "REP" + rep.getIdentificacion();
-            String contraseña = rep.getIdentificacion() + "";
-            String crearUsuarioSQL = "CREATE USER " + usuario + " IDENTIFIED BY " + contraseña;
+            String usuario = new StringBuilder().append("REP").append(rep.getIdentificacion()).toString();
+            String contrasena = new StringBuilder().append("PASS").append(rep.getIdentificacion()).toString();
+            String crearUsuarioSQL = new StringBuilder().append("CREATE USER ").append(usuario).append(" IDENTIFIED BY ").append(contrasena).toString();
             statement = conn.prepareStatement(crearUsuarioSQL);
             System.out.println("Creando usuario");
             statement.executeUpdate();
+            System.out.println("Creando usuario - EXITOSO");
 
-            // Ejecutar el procedimiento almacenado
-            String asignarRolSQL = "{ call A_R_CLIENTE(?, ?) }";
-            CallableStatement callableStatement = conn.prepareCall(asignarRolSQL);
-            callableStatement.setString(1, usuario);
-            callableStatement.setString(2, "R_REPRE");
-            System.out.println("Brindando privilegios");
-            callableStatement.execute();
 
-            System.out.println("Se ha creado el usuario: " + usuario + " con pass:" + contraseña);
+            for (String priv: OracleConnection.privileges){
+                String grantUsuarioSQL = "GRANT " + priv + " TO " + usuario;
+                statement = conn.prepareStatement(grantUsuarioSQL);
+                statement.executeUpdate();
+            }
+            System.out.println("Privilegios otorgados");
+
+            System.out.println("Se ha creado el usuario: " + usuario + " con pass:" + contrasena);
             conn.commit();
         } catch (Exception e){
             conn.rollback();
@@ -104,7 +113,7 @@ public class RepresentanteDAOImpl implements RepresentanteDAO {
         OracleConnection connCredentials = new OracleConnection(credenciales.user(),credenciales.password());
         Connection conn = connCredentials.getConn();
 
-        String sql = "SELECT * FROM VISTA_REPS WHERE n_correo = ?";
+        String sql = "SELECT * FROM VISTA_REPRESENTANTE WHERE n_correo = ?";
         PreparedStatement statement = conn.prepareStatement(sql);
         statement.setString(1, correo.data());
 
