@@ -27,6 +27,7 @@ Los endpoints que provee la API son:
 |representante/obtenerVistas/{correo} | GET | Obtener vista simplificada de representante.|
 
 Las peticiones son enviadas en formato JSON y sus atributos son acordes a la entidad que representan en el modelo relacional.
-
+<br>
+Nota: Mejorar el sisstema de conexiones a la base de datos, puesto que está pensado para ser un sistema recurrente.
 
 
